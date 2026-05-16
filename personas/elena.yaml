@@ -1,0 +1,53 @@
+id: persona-elena-001
+dna_version: 1
+
+identity:
+  name: Elena Morales
+  age: 67
+  gender: F
+  location:
+    city: Albuquerque
+    region: NM-US
+
+economics:
+  occupation: Retired schoolteacher
+  employment_status: retired
+  monthly_income_usd: 3100
+  savings_usd: 145000
+  debt: {}
+  recurring_expenses_usd:
+    rent: 850
+    utilities: 140
+    subscriptions: 25
+    transit: 60
+    insurance: 320
+    other: 180
+
+psychographics:
+  big_five:
+    O: 0.50
+    C: 0.75
+    E: 0.40
+    A: 0.85
+    N: 0.30
+  values:
+    price: 0.55
+    quality: 0.85
+    brand: 0.50
+    eco: 0.40
+    novelty: 0.20
+
+life_stage:
+  stage: retiree
+  household:
+    composition: alone
+    size: 1
+  children: 0
+
+preferences:
+  category_propensity:
+    groceries: 0.95
+    electronics: 0.20
+    dining: 0.35
+  channel: mixed
+  price_sensitivity: 0.55

@@ -1,0 +1,19 @@
+scenario_id: baseline
+start_date: 2026-01-01
+n_ticks: 90
+seed: 42
+
+personas_dir: personas
+world_dir: world
+
+notes:
+  - "Baseline 3-persona, 90-day run with default macro state and no scenario perturbations."
+
+macro:
+  inflation_rate: 0.03
+  unemployment_rate: 0.04
+  consumer_sentiment: 0.55
+
+category_knobs: {}
+
+scripted_events: []

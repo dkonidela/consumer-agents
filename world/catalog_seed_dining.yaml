@@ -1,0 +1,16 @@
+# v0 dining seed catalog. Mix of fast/casual/premium.
+- { id: sku-dine-001, name: "Coffee Shop Drip Coffee",  category: dining, subcategory: coffee,     brand: LocalCafe,  quality_tier: standard, eco_score: 0.60, base_price_usd: 3.50 }
+- { id: sku-dine-002, name: "Premium Latte",            category: dining, subcategory: coffee,     brand: Starbucks,  quality_tier: standard, eco_score: 0.45, base_price_usd: 5.95 }
+- { id: sku-dine-003, name: "Fast-food Combo Meal",     category: dining, subcategory: fast_food,  brand: BurgerCo,   quality_tier: budget,   eco_score: 0.30, base_price_usd: 9.99 }
+- { id: sku-dine-004, name: "Casual Lunch Bowl",        category: dining, subcategory: casual,     brand: Chipotle,   quality_tier: standard, eco_score: 0.55, base_price_usd: 12.50 }
+- { id: sku-dine-005, name: "Sit-down Dinner for One",  category: dining, subcategory: casual,     brand: LocalDiner, quality_tier: standard, eco_score: 0.50, base_price_usd: 22.00 }
+- { id: sku-dine-006, name: "Sit-down Dinner for Two",  category: dining, subcategory: casual,     brand: LocalDiner, quality_tier: standard, eco_score: 0.50, base_price_usd: 48.00 }
+- { id: sku-dine-007, name: "Premium Tasting Menu",     category: dining, subcategory: fine,       brand: FineDining, quality_tier: premium,  eco_score: 0.65, base_price_usd: 145.00 }
+- { id: sku-dine-008, name: "Pizza Delivery (Large)",   category: dining, subcategory: delivery,   brand: PizzaCo,    quality_tier: standard, eco_score: 0.40, base_price_usd: 24.99 }
+- { id: sku-dine-009, name: "Sushi Delivery",           category: dining, subcategory: delivery,   brand: SushiPlace, quality_tier: standard, eco_score: 0.55, base_price_usd: 32.00 }
+- { id: sku-dine-010, name: "Family Restaurant Meal",   category: dining, subcategory: casual,     brand: ChainRest,  quality_tier: standard, eco_score: 0.45, base_price_usd: 65.00 }
+- { id: sku-dine-011, name: "Coffee Shop Pastry",       category: dining, subcategory: coffee,     brand: LocalCafe,  quality_tier: standard, eco_score: 0.55, base_price_usd: 4.25 }
+- { id: sku-dine-012, name: "Smoothie",                 category: dining, subcategory: cafe,       brand: SmoothieCo, quality_tier: standard, eco_score: 0.65, base_price_usd: 7.50 }
+- { id: sku-dine-013, name: "Brunch (per person)",      category: dining, subcategory: casual,     brand: LocalDiner, quality_tier: standard, eco_score: 0.55, base_price_usd: 18.50 }
+- { id: sku-dine-014, name: "Bar Drinks (round of 2)",  category: dining, subcategory: bar,        brand: LocalBar,   quality_tier: standard, eco_score: 0.40, base_price_usd: 26.00 }
+- { id: sku-dine-015, name: "Takeout Tacos",            category: dining, subcategory: delivery,   brand: TacoTruck,  quality_tier: standard, eco_score: 0.50, base_price_usd: 14.50 }

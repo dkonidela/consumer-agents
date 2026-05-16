@@ -1,0 +1,28 @@
+scenario_id: electronics_shock
+start_date: 2026-01-01
+n_ticks: 90
+seed: 42
+
+personas_dir: personas
+world_dir: world
+
+notes:
+  - "Counterfactual: electronics prices +20% relative to baseline. Same seed and start as baseline."
+  - "Hypothesis: window-shopping volume on electronics holds, but purchase conversion drops, especially for price-sensitive personas (Maya, Elena)."
+
+macro:
+  inflation_rate: 0.03
+  unemployment_rate: 0.04
+  consumer_sentiment: 0.55
+
+category_knobs:
+  electronics: 0.20
+
+scripted_events:
+  - day: 45
+    agent_id: persona-maya-001
+    event_id: fired_from_work
+    narration: "Maya's research grant runs dry; her TA position is cut."
+    dna_diff:
+      economics.employment_status: unemployed
+      economics.monthly_income_usd: 0

@@ -1,0 +1,56 @@
+id: persona-raj-001
+dna_version: 1
+
+identity:
+  name: Raj Iyer
+  age: 41
+  gender: M
+  location:
+    city: Plano
+    region: TX-US
+
+economics:
+  occupation: Software engineering manager
+  employment_status: employed
+  monthly_income_usd: 11500
+  savings_usd: 62000
+  debt:
+    mortgage_usd: 285000
+    credit_card_usd: 4200
+  recurring_expenses_usd:
+    rent: 0
+    utilities: 320
+    subscriptions: 95
+    transit: 220
+    insurance: 480
+    childcare: 1600
+    other: 350
+
+psychographics:
+  big_five:
+    O: 0.45
+    C: 0.85
+    E: 0.55
+    A: 0.70
+    N: 0.35
+  values:
+    price: 0.40
+    quality: 0.80
+    brand: 0.65
+    eco: 0.40
+    novelty: 0.30
+
+life_stage:
+  stage: parent
+  household:
+    composition: family
+    size: 4
+  children: 2
+
+preferences:
+  category_propensity:
+    groceries: 0.90
+    electronics: 0.70
+    dining: 0.65
+  channel: mixed
+  price_sensitivity: 0.40

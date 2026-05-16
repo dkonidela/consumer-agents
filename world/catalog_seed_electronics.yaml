@@ -1,0 +1,16 @@
+# v0 electronics seed catalog. ~15 SKUs across price tiers.
+- { id: sku-elec-001, name: "Budget Smartphone",        category: electronics, subcategory: phone,      brand: BasicPhone, quality_tier: budget,  eco_score: 0.40, base_price_usd: 249 }
+- { id: sku-elec-002, name: "Mid-range Smartphone",     category: electronics, subcategory: phone,      brand: TechCo,     quality_tier: mid,     eco_score: 0.50, base_price_usd: 599 }
+- { id: sku-elec-003, name: "Flagship Smartphone",      category: electronics, subcategory: phone,      brand: FlagshipCo, quality_tier: premium, eco_score: 0.60, base_price_usd: 1099 }
+- { id: sku-elec-004, name: "Budget Laptop",            category: electronics, subcategory: laptop,     brand: BasicCo,    quality_tier: budget,  eco_score: 0.35, base_price_usd: 449 }
+- { id: sku-elec-005, name: "Mid-range Laptop",         category: electronics, subcategory: laptop,     brand: TechCo,     quality_tier: mid,     eco_score: 0.50, base_price_usd: 899 }
+- { id: sku-elec-006, name: "Premium Laptop",           category: electronics, subcategory: laptop,     brand: FlagshipCo, quality_tier: premium, eco_score: 0.60, base_price_usd: 1799 }
+- { id: sku-elec-007, name: "Wireless Earbuds (budget)", category: electronics, subcategory: audio,     brand: BasicCo,    quality_tier: budget,  eco_score: 0.35, base_price_usd: 39 }
+- { id: sku-elec-008, name: "Wireless Earbuds (mid)",   category: electronics, subcategory: audio,      brand: TechCo,     quality_tier: mid,     eco_score: 0.50, base_price_usd: 129 }
+- { id: sku-elec-009, name: "Wireless Earbuds (premium)", category: electronics, subcategory: audio,    brand: FlagshipCo, quality_tier: premium, eco_score: 0.55, base_price_usd: 249 }
+- { id: sku-elec-010, name: "Smart Watch",              category: electronics, subcategory: wearable,   brand: TechCo,     quality_tier: mid,     eco_score: 0.50, base_price_usd: 299 }
+- { id: sku-elec-011, name: "Tablet (10-inch)",         category: electronics, subcategory: tablet,     brand: TechCo,     quality_tier: mid,     eco_score: 0.50, base_price_usd: 399 }
+- { id: sku-elec-012, name: "TV (55-inch 4K)",          category: electronics, subcategory: tv,         brand: TechCo,     quality_tier: mid,     eco_score: 0.40, base_price_usd: 549 }
+- { id: sku-elec-013, name: "TV (65-inch 4K OLED)",     category: electronics, subcategory: tv,         brand: FlagshipCo, quality_tier: premium, eco_score: 0.50, base_price_usd: 1499 }
+- { id: sku-elec-014, name: "Bluetooth Speaker",        category: electronics, subcategory: audio,      brand: TechCo,     quality_tier: mid,     eco_score: 0.45, base_price_usd: 89 }
+- { id: sku-elec-015, name: "Smart Home Hub",           category: electronics, subcategory: smart_home, brand: TechCo,     quality_tier: mid,     eco_score: 0.55, base_price_usd: 79 }

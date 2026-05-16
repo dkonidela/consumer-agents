@@ -1,0 +1,52 @@
+id: persona-maya-001
+dna_version: 1
+
+identity:
+  name: Maya Patel
+  age: 28
+  gender: F
+  location:
+    city: Boston
+    region: MA-US
+
+economics:
+  occupation: PhD student (CS)
+  employment_status: student
+  monthly_income_usd: 2400
+  savings_usd: 3200
+  debt:
+    student_loan_usd: 48000
+  recurring_expenses_usd:
+    rent: 1400
+    utilities: 80
+    subscriptions: 35
+    transit: 90
+
+psychographics:
+  big_five:
+    O: 0.85
+    C: 0.70
+    E: 0.45
+    A: 0.65
+    N: 0.60
+  values:
+    price: 0.80
+    quality: 0.60
+    brand: 0.20
+    eco: 0.70
+    novelty: 0.75
+
+life_stage:
+  stage: student
+  household:
+    composition: roommates
+    size: 2
+  children: 0
+
+preferences:
+  category_propensity:
+    groceries: 0.95
+    electronics: 0.40
+    dining: 0.55
+  channel: online_first
+  price_sensitivity: 0.80

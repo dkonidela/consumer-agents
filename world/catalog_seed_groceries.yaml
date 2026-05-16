@@ -1,0 +1,27 @@
+# v0 grocery seed catalog (fallback for when Open Food Facts is unavailable).
+# Prices are USD, anchored to plausible 2026 US grocery store ranges.
+- { id: sku-groc-001, name: "Whole Milk (1 gal)",       category: groceries, subcategory: dairy,    brand: store-brand,  quality_tier: standard, eco_score: 0.45, base_price_usd: 4.29 }
+- { id: sku-groc-002, name: "Organic Whole Milk (1 gal)", category: groceries, subcategory: dairy,  brand: Horizon,      quality_tier: premium,  eco_score: 0.80, base_price_usd: 6.99 }
+- { id: sku-groc-003, name: "Bananas (1 lb)",           category: groceries, subcategory: produce,  brand: store-brand,  quality_tier: standard, eco_score: 0.60, base_price_usd: 0.69 }
+- { id: sku-groc-004, name: "Avocados (each)",          category: groceries, subcategory: produce,  brand: store-brand,  quality_tier: standard, eco_score: 0.55, base_price_usd: 1.49 }
+- { id: sku-groc-005, name: "White Bread (loaf)",       category: groceries, subcategory: bakery,   brand: store-brand,  quality_tier: budget,   eco_score: 0.40, base_price_usd: 2.49 }
+- { id: sku-groc-006, name: "Sourdough Loaf",           category: groceries, subcategory: bakery,   brand: artisan,      quality_tier: premium,  eco_score: 0.60, base_price_usd: 6.49 }
+- { id: sku-groc-007, name: "Eggs (dozen)",             category: groceries, subcategory: dairy,    brand: store-brand,  quality_tier: standard, eco_score: 0.50, base_price_usd: 3.79 }
+- { id: sku-groc-008, name: "Free-range Eggs (dozen)",  category: groceries, subcategory: dairy,    brand: Vital Farms,  quality_tier: premium,  eco_score: 0.85, base_price_usd: 7.99 }
+- { id: sku-groc-009, name: "Chicken Breast (1 lb)",    category: groceries, subcategory: meat,     brand: store-brand,  quality_tier: standard, eco_score: 0.45, base_price_usd: 5.99 }
+- { id: sku-groc-010, name: "Ground Beef (1 lb, 80/20)", category: groceries, subcategory: meat,    brand: store-brand,  quality_tier: standard, eco_score: 0.35, base_price_usd: 6.49 }
+- { id: sku-groc-011, name: "Rice (5 lb bag)",          category: groceries, subcategory: pantry,   brand: store-brand,  quality_tier: standard, eco_score: 0.55, base_price_usd: 8.99 }
+- { id: sku-groc-012, name: "Pasta (1 lb)",             category: groceries, subcategory: pantry,   brand: Barilla,      quality_tier: standard, eco_score: 0.55, base_price_usd: 1.99 }
+- { id: sku-groc-013, name: "Olive Oil (500 ml)",       category: groceries, subcategory: pantry,   brand: store-brand,  quality_tier: standard, eco_score: 0.60, base_price_usd: 7.99 }
+- { id: sku-groc-014, name: "Tomato Sauce (24 oz)",     category: groceries, subcategory: pantry,   brand: Rao's,        quality_tier: premium,  eco_score: 0.60, base_price_usd: 8.99 }
+- { id: sku-groc-015, name: "Cereal (family box)",      category: groceries, subcategory: pantry,   brand: Cheerios,     quality_tier: standard, eco_score: 0.50, base_price_usd: 5.49 }
+- { id: sku-groc-016, name: "Orange Juice (64 oz)",     category: groceries, subcategory: beverage, brand: Tropicana,    quality_tier: standard, eco_score: 0.50, base_price_usd: 5.99 }
+- { id: sku-groc-017, name: "Coffee (12 oz, whole bean)", category: groceries, subcategory: beverage, brand: Stumptown,  quality_tier: premium,  eco_score: 0.75, base_price_usd: 16.99 }
+- { id: sku-groc-018, name: "Coffee (12 oz, ground)",   category: groceries, subcategory: beverage, brand: Folgers,      quality_tier: budget,   eco_score: 0.45, base_price_usd: 7.99 }
+- { id: sku-groc-019, name: "Yogurt (32 oz tub)",       category: groceries, subcategory: dairy,    brand: Chobani,      quality_tier: standard, eco_score: 0.60, base_price_usd: 5.99 }
+- { id: sku-groc-020, name: "Frozen Pizza",             category: groceries, subcategory: frozen,   brand: DiGiorno,     quality_tier: standard, eco_score: 0.40, base_price_usd: 6.99 }
+- { id: sku-groc-021, name: "Spinach (5 oz bag)",       category: groceries, subcategory: produce,  brand: Earthbound,   quality_tier: standard, eco_score: 0.75, base_price_usd: 3.99 }
+- { id: sku-groc-022, name: "Cheese (8 oz block)",      category: groceries, subcategory: dairy,    brand: Tillamook,    quality_tier: standard, eco_score: 0.55, base_price_usd: 5.99 }
+- { id: sku-groc-023, name: "Paper Towels (6-pack)",    category: groceries, subcategory: household, brand: Bounty,      quality_tier: standard, eco_score: 0.35, base_price_usd: 14.99 }
+- { id: sku-groc-024, name: "Toilet Paper (12-pack)",   category: groceries, subcategory: household, brand: Charmin,     quality_tier: standard, eco_score: 0.30, base_price_usd: 19.99 }
+- { id: sku-groc-025, name: "Dish Soap (28 oz)",        category: groceries, subcategory: household, brand: Dawn,        quality_tier: standard, eco_score: 0.40, base_price_usd: 4.99 }

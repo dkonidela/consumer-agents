@@ -1,0 +1,14 @@
+# Holmes-Rahe Social Readjustment Rating Scale — v0 subset (10 events).
+# Full 43-event vocabulary deferred to v1.
+# `lcu` = Life Change Units (impact / severity).
+# `group` = used for scenario knobs (e.g., recession bumps the employment group).
+- { id: fired_from_work,         lcu: 47, group: employment }
+- { id: change_to_different_line, lcu: 36, group: employment }
+- { id: business_readjustment,   lcu: 39, group: employment }
+- { id: marriage,                lcu: 50, group: family }
+- { id: divorce,                 lcu: 73, group: family }
+- { id: pregnancy,               lcu: 40, group: family }
+- { id: change_in_finances,      lcu: 38, group: finance }
+- { id: change_in_living_conditions, lcu: 25, group: housing }
+- { id: vacation,                lcu: 13, group: leisure }
+- { id: personal_illness,        lcu: 53, group: health }

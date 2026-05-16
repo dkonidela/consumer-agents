@@ -1,0 +1,13 @@
+# v0 retailers (2). Premium tier deferred to v1.
+- id: ret-valuemart
+  name: ValueMart
+  positioning: discount
+  price_mult: 0.85
+  assortment: [groceries, electronics, dining]
+  channel: mixed
+- id: ret-everystore
+  name: EveryStore
+  positioning: mainstream
+  price_mult: 1.00
+  assortment: [groceries, electronics, dining]
+  channel: mixed
