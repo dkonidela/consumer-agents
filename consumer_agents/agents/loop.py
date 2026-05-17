@@ -45,11 +45,12 @@ def emit_payday_and_expenses(
     calendar: SimCalendar,
     writer: EventWriter,
 ) -> None:
-    """Credit semi-monthly income on paydays; debit a 1/30 slice of
-    recurring expenses each day. Keeps the cash flow legible without
-    needing a full ledger."""
+    """Credit bi-monthly income on paydays; debit full recurring expenses
+    once per month on the 1st. Cleaner event log than daily slicing and
+    more realistic — rent isn't actually debited in 1/30 chunks."""
     persona = rt.persona
     today = calendar.today
+
     if calendar.is_payday() and persona.economics.monthly_income_usd > 0:
         amount = persona.economics.monthly_income_usd / 2  # bi-monthly
         rt.cash_usd += amount
@@ -57,10 +58,10 @@ def emit_payday_and_expenses(
         writer.append(persona.id, today, "income", payload)
         rt.record("income", payload, calendar.current_day)
 
-    daily_expense = persona.economics.recurring_expenses_usd.monthly_total / 30.0
-    if daily_expense > 0:
-        rt.cash_usd -= daily_expense
-        payload = {"amount_usd": round(daily_expense, 2), "category": "recurring"}
+    monthly_expense = persona.economics.recurring_expenses_usd.monthly_total
+    if calendar.is_first_of_month() and monthly_expense > 0:
+        rt.cash_usd -= monthly_expense
+        payload = {"amount_usd": round(monthly_expense, 2), "category": "recurring"}
         writer.append(persona.id, today, "expense", payload)
         rt.record("expense", payload, calendar.current_day)
 

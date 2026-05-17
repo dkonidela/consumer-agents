@@ -61,7 +61,5 @@ class SnapshotWriter:
     def flush(self) -> None:
         self.out_path.parent.mkdir(parents=True, exist_ok=True)
         cols = {k: [r[k] for r in self._rows] for k in _SCHEMA.names}
-        # JSON-encode any remaining structured fields (just dna_blob, already a string or None).
-        cols["dna_blob"] = [r if r is not None else None for r in cols["dna_blob"]]
         table = pa.Table.from_pydict(cols, schema=_SCHEMA)
         pq.write_table(table, self.out_path)
