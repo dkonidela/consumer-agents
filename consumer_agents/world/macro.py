@@ -16,7 +16,7 @@ class MacroState(BaseModel):
     notes: list[str] = Field(default_factory=list, description="Scenario context for LLM prompts")
 
     def to_prompt(self) -> str:
-        """Compact rendering for inclusion in DecisionEngine prompts."""
+        """Compact rendering for inclusion in BehaviorEngine prompts."""
         parts = [
             f"Inflation: {self.inflation_rate * 100:.1f}%",
             f"Unemployment: {self.unemployment_rate * 100:.1f}%",

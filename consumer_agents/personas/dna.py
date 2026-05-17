@@ -143,7 +143,7 @@ class Persona(BaseModel):
         return v or {}
 
     def to_prompt(self) -> str:
-        """Compact natural-language rendering for the DecisionEngine system prompt."""
+        """Compact natural-language rendering for the BehaviorEngine system prompt."""
         bf = self.psychographics.big_five
         v = self.psychographics.values
         traits = []

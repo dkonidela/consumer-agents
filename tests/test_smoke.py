@@ -1,6 +1,6 @@
-"""End-to-end smoke test with an injected FakeDecisionEngine.
+"""End-to-end smoke test with an injected FakeBehaviorEngine.
 
-Runs without an ANTHROPIC_API_KEY. The real DecisionEngine returns []
+Runs without an ANTHROPIC_API_KEY. The real BehaviorEngine returns []
 when no key is set; tests inject a small fake that emits a
 deterministic action sequence so the rest of the pipeline can be
 verified.
@@ -12,12 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from consumer_agents.agents.decision import Action, DecisionEngine
+from consumer_agents.agents.behavior import Action, BehaviorEngine
 from consumer_agents.datalake.queries import open_run
 from consumer_agents.scenarios.runner import run_scenario
 
 
-class FakeDecisionEngine(DecisionEngine):
+class FakeBehaviorEngine(BehaviorEngine):
     """Deterministic engine: Tue/Sat = grocery purchase; Sun = dining outing."""
 
     def __init__(self):
@@ -25,7 +25,7 @@ class FakeDecisionEngine(DecisionEngine):
         self.model = "fake"
         self.client = None
 
-    def decide(self, persona, catalog, macro, calendar, recent_events, reflections, cash_usd, category_knobs=None):
+    def simulate(self, persona, catalog, macro, calendar, recent_events, reflections, cash_usd, category_knobs=None):
         dow = calendar.day_of_week()
         if dow in {1, 5}:  # Tue, Sat
             sku = catalog.skus_by_category("groceries")[0]
@@ -120,7 +120,7 @@ def test_smoke_run(smoke_scenario: Path, tmp_path: Path, monkeypatch):
     run_dir = run_scenario(
         scenario_path=smoke_scenario,
         run_root=tmp_path / "runs",
-        decision=FakeDecisionEngine(),
+        behavior=FakeBehaviorEngine(),
     )
     assert run_dir.exists()
     assert (run_dir / "events.parquet").exists()
@@ -148,10 +148,10 @@ def test_smoke_run(smoke_scenario: Path, tmp_path: Path, monkeypatch):
 def test_reproducibility(smoke_scenario: Path, tmp_path: Path, monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     r1 = run_scenario(
-        scenario_path=smoke_scenario, run_root=tmp_path / "r1", decision=FakeDecisionEngine()
+        scenario_path=smoke_scenario, run_root=tmp_path / "r1", behavior=FakeBehaviorEngine()
     )
     r2 = run_scenario(
-        scenario_path=smoke_scenario, run_root=tmp_path / "r2", decision=FakeDecisionEngine()
+        scenario_path=smoke_scenario, run_root=tmp_path / "r2", behavior=FakeBehaviorEngine()
     )
     con1 = open_run(r1)
     con2 = open_run(r2)
@@ -160,10 +160,10 @@ def test_reproducibility(smoke_scenario: Path, tmp_path: Path, monkeypatch):
     assert c1 == c2
 
 
-def test_decision_engine_no_key_returns_empty(monkeypatch):
-    """Without an API key, the real DecisionEngine returns [] — no fallback stub."""
+def test_behavior_engine_no_key_returns_empty(monkeypatch):
+    """Without an API key, the real BehaviorEngine returns [] — no fallback stub."""
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    engine = DecisionEngine()
+    engine = BehaviorEngine()
     from datetime import date
 
     from consumer_agents.personas.dna import load_persona
@@ -175,5 +175,5 @@ def test_decision_engine_no_key_returns_empty(monkeypatch):
     persona = load_persona(repo / "personas" / "maya.yaml")
     catalog = load_catalog(repo / "world")
     cal = SimCalendar(start_date=date(2026, 1, 1), current_day=5)
-    actions = engine.decide(persona, catalog, MacroState(), cal, [], [], 1000.0)
+    actions = engine.simulate(persona, catalog, MacroState(), cal, [], [], 1000.0)
     assert actions == []

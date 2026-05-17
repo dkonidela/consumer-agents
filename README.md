@@ -6,7 +6,7 @@
 
 ## What it is
 
-A small society of "digital humans" (3 in v0, scaling later) live day-to-day lives: working, browsing, buying, reacting to life events. Each consumer has structured DNA (Big Five personality, economics, life stage, preferences). A stateless `DecisionEngine` makes one LLM call (Anthropic) per consumer per day to decide what they do. Life events (scripted in v0 from the Holmes-Rahe vocabulary; LLM-driven in v1) mutate state over time. Output lands in Parquet + DuckDB, ready for analysis and articles.
+A small society of "digital humans" (3 in v0, scaling later) live day-to-day lives: working, browsing, buying, reacting to life events. Each consumer has structured DNA (Big Five personality, economics, life stage, preferences). A stateless `BehaviorEngine` makes one LLM call (Anthropic) per consumer per day to decide what they do. Life events (scripted in v0 from the Holmes-Rahe vocabulary; LLM-driven in v1) mutate state over time. Output lands in Parquet + DuckDB, ready for analysis and articles.
 
 ## Why
 

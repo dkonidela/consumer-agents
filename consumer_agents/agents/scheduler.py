@@ -2,13 +2,13 @@
 
 For v0 (3 consumers, 90 days) the sync loop is enough. Async fan-out,
 prompt caching, and the Batches API are deferred to v1; the
-DecisionEngine adapter keeps that path additive, not a rewrite.
+BehaviorEngine adapter keeps that path additive, not a rewrite.
 
 Per tick:
     for each consumer:
         1. fire any scripted life events for today
         2. credit payday / debit recurring expense
-        3. ask the DecisionEngine what they do today; apply
+        3. ask the BehaviorEngine what they do today; apply
         4. write daily-econ snapshot
     if it's the start of a new week:
         for each consumer:
@@ -25,7 +25,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from consumer_agents.agents.decision import DecisionEngine
+from consumer_agents.agents.behavior import BehaviorEngine
 from consumer_agents.agents.loop import ConsumerRuntime, step
 from consumer_agents.agents.reflection import ReflectionEngine
 from consumer_agents.datalake.events import EventWriter
@@ -58,7 +58,7 @@ def run_scheduler(
     personas: list[Persona],
     catalog: Catalog,
     macro: MacroState,
-    decision: DecisionEngine,
+    behavior: BehaviorEngine,
     life: LifeEventEngine,
     reflect: ReflectionEngine,
 ) -> None:
@@ -93,8 +93,8 @@ def run_scheduler(
                 events_writer.append(rt.persona.id, today, "life_event", payload)
                 rt.record("life_event", payload, calendar.current_day)
 
-            # 2-3. Daily step (cash flows + decision + actions).
-            step(rt, decision, catalog, macro, calendar, events_writer, config.category_knobs)
+            # 2-3. Daily step (cash flows + behavior + actions).
+            step(rt, behavior, catalog, macro, calendar, events_writer, config.category_knobs)
 
             # 4. Daily economics snapshot.
             snap_writer.append_daily(rt.persona.id, today, rt.persona, rt.cash_usd)

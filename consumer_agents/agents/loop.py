@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
 
-from consumer_agents.agents.decision import Action, DecisionEngine
+from consumer_agents.agents.behavior import Action, BehaviorEngine
 from consumer_agents.datalake.events import EventWriter
 from consumer_agents.personas.dna import Persona
 from consumer_agents.world.calendar import SimCalendar
@@ -86,7 +86,7 @@ def apply_actions(
 
 def step(
     rt: ConsumerRuntime,
-    engine: DecisionEngine,
+    engine: BehaviorEngine,
     catalog: Catalog,
     macro: MacroState,
     calendar: SimCalendar,
@@ -95,7 +95,7 @@ def step(
 ) -> None:
     """One consumer's day: cash flows + decisions + logging."""
     emit_payday_and_expenses(rt, calendar, writer)
-    actions = engine.decide(
+    actions = engine.simulate(
         persona=rt.persona,
         catalog=catalog,
         macro=macro,

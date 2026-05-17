@@ -1,12 +1,12 @@
-"""DecisionEngine — one LLM call per consumer per day.
+"""BehaviorEngine — one LLM call per consumer per day.
 
 A stateless engine. The same instance serves every consumer. Each
-`decide()` call sends the persona's DNA, recent memory, reflections,
+`simulate()` call sends the persona's DNA, recent memory, reflections,
 catalog, macro state, and scenario knobs to the LLM, which returns a
 structured list of actions via the `emit_actions` tool.
 
-When no ANTHROPIC_API_KEY is configured, `decide()` returns an empty
-action list. Tests inject a `FakeDecisionEngine` subclass instead of
+When no ANTHROPIC_API_KEY is configured, `simulate()` returns an empty
+action list. Tests inject a `FakeBehaviorEngine` subclass instead of
 relying on a production fallback.
 """
 
@@ -37,7 +37,8 @@ EMIT_ACTIONS_TOOL = {
     "description": (
         "Emit the consumer's actions for today. Return a list of actions. "
         "Most days have a few actions or none at all. Valid event_type "
-        "values: view, cart_add, purchase, abandon."
+        "values: view, cart_add, purchase, abandon. Skip any free-text "
+        "reasoning — go straight to the action list."
     ),
     "input_schema": {
         "type": "object",
@@ -56,17 +57,13 @@ EMIT_ACTIONS_TOOL = {
                     "required": ["event_type", "payload"],
                 },
             },
-            "reasoning": {
-                "type": "string",
-                "description": "Brief explanation of why this set of actions",
-            },
         },
         "required": ["actions"],
     },
 }
 
 
-class DecisionEngine:
+class BehaviorEngine:
     """One LLM call per consumer per tick. No rule path, no stub."""
 
     def __init__(self, model: str = DEFAULT_MODEL, api_key: str | None = None):
@@ -74,7 +71,7 @@ class DecisionEngine:
         key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         self.client = anthropic.Anthropic(api_key=key) if key else None
 
-    def decide(
+    def simulate(
         self,
         persona: Persona,
         catalog: Catalog,
@@ -95,14 +92,14 @@ class DecisionEngine:
         try:
             resp = self.client.messages.create(
                 model=self.model,
-                max_tokens=1024,
+                max_tokens=2048,
                 system=system,
                 tools=[EMIT_ACTIONS_TOOL],
                 tool_choice={"type": "tool", "name": "emit_actions"},
                 messages=[{"role": "user", "content": user}],
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[DecisionEngine] LLM call failed ({exc}); no actions today.")
+            print(f"[BehaviorEngine] LLM call failed ({exc}); no actions today.")
             return []
 
         for block in resp.content:

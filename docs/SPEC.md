@@ -24,7 +24,7 @@ DuckDB and ready for notebooks or articles.
 The system is **LLM-native**: the decision-making and weekly reflections
 run through an LLM (Anthropic) at runtime rather than from hardcoded
 rule sets. Without an `ANTHROPIC_API_KEY`, the engines return empty
-results; tests inject a deterministic `FakeDecisionEngine` to exercise
+results; tests inject a deterministic `FakeBehaviorEngine` to exercise
 the pipeline end-to-end without a key.
 
 **v0 keeps the engine surface narrow.** One LLM call per consumer per
@@ -65,7 +65,7 @@ added without scenario-format changes.)
         ▼                  ▼                       ▼
 ┌──────────────┐  ┌─────────────────┐  ┌──────────────────────────┐
 │ Persona DNA  │  │ World           │  │ LLM-backed Engines       │
-│ (data)       │  │ Calendar /      │  │ DecisionEngine           │
+│ (data)       │  │ Calendar /      │  │ BehaviorEngine           │
 │              │  │ Catalog /       │  │ ReflectionEngine         │
 │              │  │ MacroState      │  │ LifeEventEngine          │
 └──────────────┘  └─────────────────┘  └──────────────────────────┘
@@ -82,11 +82,11 @@ added without scenario-format changes.)
                                 └────────────────────────────────┘
 ```
 
-The scheduler is **synchronous** in v0. The `DecisionEngine` adapter
+The scheduler is **synchronous** in v0. The `BehaviorEngine` adapter
 keeps the async / Batches API / prompt-caching path additive for v1 —
 not a rewrite. See `consumer_agents/agents/scheduler.py`.
 
-**One stateless `DecisionEngine` serves every consumer.** A consumer is
+**One stateless `BehaviorEngine` serves every consumer.** A consumer is
 data (DNA + memory + event history), not a process. This is what makes
 the same architecture cover 3 consumers and 1,000 consumers without
 re-engineering.
@@ -112,7 +112,7 @@ consumer-agents/
 │   │   ├── catalog_loader.py # Open Food Facts loader stub (v1)
 │   │   └── life_events.py    # LifeEventEngine + dotted-path DNA diffs
 │   ├── agents/
-│   │   ├── decision.py       # DecisionEngine — single LLM call per day
+│   │   ├── behavior.py       # BehaviorEngine — single LLM call per day
 │   │   ├── reflection.py     # Weekly reflections (Park et al., 2023)
 │   │   ├── loop.py           # Per-consumer daily step()
 │   │   └── scheduler.py      # The outer for-each-tick loop
@@ -173,7 +173,7 @@ consumer-agents run examples/baseline.yaml
      (`world/catalog.py:load_catalog`).
    - Loads the 10-event Holmes-Rahe vocabulary
      (`world/life_events.py:load_vocab`).
-   - Constructs the engines: `DecisionEngine`, `ReflectionEngine`,
+   - Constructs the engines: `BehaviorEngine`, `ReflectionEngine`,
      `LifeEventEngine`.
    - Builds a `RunConfig` and calls `agents/scheduler.py:run_scheduler()`.
 
@@ -194,9 +194,9 @@ consumer-agents run examples/baseline.yaml
         month, credit half the monthly income to `cash_usd` and emit an
         `income` event. Every day, debit 1/30 of monthly recurring
         expenses and emit an `expense` event.
-      - **decide()** (`agents/decision.py:DecisionEngine.decide`):
+      - **simulate()** (`agents/behavior.py:BehaviorEngine.simulate`):
         One LLM call. Returns a list of `Action`s. With no API key it
-        returns `[]`; tests inject a `FakeDecisionEngine` subclass to
+        returns `[]`; tests inject a `FakeBehaviorEngine` subclass to
         emit deterministic actions instead.
       - **apply_actions()**: emit each `Action` to the EventWriter and
         deduct cash on `purchase`.
@@ -209,7 +209,7 @@ consumer-agents run examples/baseline.yaml
    d. **Reflection** (`agents/reflection.py:ReflectionEngine.reflect`):
       One LLM call that produces 2–3 abstract observations about the
       persona's week. Stored in `runtime.reflections` and emitted as a
-      `reflection` event. These are passed to future `decide()` calls
+      `reflection` event. These are passed to future `simulate()` calls
       so the persona's self-model carries forward.
 
    e. **Weekly DNA snapshot**: full persona blob serialized to JSON in
@@ -264,24 +264,24 @@ across age, life stage, income, and personality so behavior is legible
 in articles. A procedural generator is planned for v1 (when we need
 100s of agents).
 
-### 5.2 DecisionEngine (`agents/decision.py`)
+### 5.2 BehaviorEngine (`agents/behavior.py`)
 
 One stateless instance serves every consumer. Per-tick flow is a
 single LLM call:
 
 ```
-decide(persona, catalog, macro, calendar,
+simulate(persona, catalog, macro, calendar,
        recent_events, reflections, cash, knobs)
     │
     ├─► api_key present → LLM call (emit_actions tool) → list[Action]
     │
-    └─► no api_key      → []   (tests inject FakeDecisionEngine)
+    └─► no api_key      → []   (tests inject FakeBehaviorEngine)
 ```
 
 The LLM is forced via `tool_choice` to emit a list of
 `{event_type, payload}` actions. Failure (network, parse error, rate
 limit) returns `[]` so a single bad call never poisons a run. Tests
-inject a `FakeDecisionEngine` subclass that overrides `decide()` to
+inject a `FakeBehaviorEngine` subclass that overrides `simulate()` to
 emit deterministic actions for the no-key path.
 
 Output is a list of `Action(event_type, payload)`. The loop layer
@@ -332,7 +332,7 @@ simulated week, per persona, the LLM summarizes the week into 2–3
 abstract observations. These are:
 - Stored in `runtime.reflections` (in-memory)
 - Emitted as `reflection` events to the event log
-- Re-injected into future `decide()` prompts
+- Re-injected into future `simulate()` prompts
 
 The point: without reflections, agents tend toward "average plausible
 human" over long runs. With reflections, they form a stable
@@ -476,7 +476,7 @@ through-line between three otherwise-different subsystems.
 ### Add a new event type
 1. Add the string to `EVENT_TYPES` in `datalake/events.py`.
 2. Add a typed view to `datalake/queries.py:VIEW_DEFS`.
-3. Emit it from wherever it originates (`DecisionEngine`, scheduler).
+3. Emit it from wherever it originates (`BehaviorEngine`, scheduler).
 
 ### Add a new life event (v0)
 1. Append to `world/life_events_vocab.yaml`.
@@ -497,7 +497,7 @@ This is the only extension that touches multiple files:
 
 ### Switch the LLM model
 Pass `--model claude-opus-4-7` to `consumer-agents run`, or change the
-default in `agents/decision.py:DEFAULT_MODEL`.
+default in `agents/behavior.py:DEFAULT_MODEL`.
 
 ---
 
@@ -542,7 +542,7 @@ What we deliberately deferred to keep v0 shippable:
 | Notebooks | 1 comparison notebook | dbt models + dashboards |
 
 The architecture was designed so each v1 item is **additive**, not a
-rewrite. The `DecisionEngine` adapter lets us slot in async, batches,
+rewrite. The `BehaviorEngine` adapter lets us slot in async, batches,
 and caching without touching the scheduler. The Parquet layout already
 matches S3 + Iceberg conventions for cloud graduation.
 
@@ -555,7 +555,7 @@ If you're new to this codebase, read in this order:
 1. `consumer_agents/personas/dna.py` — what a consumer *is*.
 2. `personas/maya.yaml` — a concrete example.
 3. `consumer_agents/world/catalog.py` — what they shop against.
-4. `consumer_agents/agents/decision.py` — how they choose.
+4. `consumer_agents/agents/behavior.py` — how they behave.
 5. `consumer_agents/agents/loop.py:step` — what happens to one consumer in one day.
 6. `consumer_agents/agents/scheduler.py:run_scheduler` — the outer loop.
 7. `consumer_agents/world/life_events.py` — how state mutates over time.
@@ -563,5 +563,5 @@ If you're new to this codebase, read in this order:
 9. `examples/baseline.yaml` and `examples/electronics_shock.yaml` — the user surface.
 
 That's about 1,500 lines total. The pieces interlock cleanly; once
-you've read `decision.py` and `scheduler.py` the rest falls into
+you've read `behavior.py` and `scheduler.py` the rest falls into
 place.

@@ -1,8 +1,8 @@
 """Scenario runner — orchestrates one full simulation from a YAML config.
 
-Engines (DecisionEngine, ReflectionEngine, LifeEventEngine) can be
+Engines (BehaviorEngine, ReflectionEngine, LifeEventEngine) can be
 injected by callers — used by the smoke test to substitute a
-deterministic fake for the LLM-backed DecisionEngine. Production
+deterministic fake for the LLM-backed BehaviorEngine. Production
 callers leave them defaulted.
 """
 
@@ -12,7 +12,7 @@ import shutil
 import uuid
 from pathlib import Path
 
-from consumer_agents.agents.decision import DecisionEngine
+from consumer_agents.agents.behavior import BehaviorEngine
 from consumer_agents.agents.reflection import ReflectionEngine
 from consumer_agents.agents.scheduler import RunConfig, run_scheduler
 from consumer_agents.personas.dna import load_personas
@@ -26,7 +26,7 @@ def run_scenario(
     base_dir: str | Path | None = None,
     run_root: str | Path = "runs",
     model: str | None = None,
-    decision: DecisionEngine | None = None,
+    behavior: BehaviorEngine | None = None,
     reflect: ReflectionEngine | None = None,
     life: LifeEventEngine | None = None,
 ) -> Path:
@@ -46,8 +46,8 @@ def run_scenario(
     catalog = load_catalog(base / config.world_dir)
     vocab = load_vocab(base / config.world_dir / "life_events_vocab.yaml")
 
-    if decision is None:
-        decision = DecisionEngine(model=model or "claude-sonnet-4-6")
+    if behavior is None:
+        behavior = BehaviorEngine(model=model or "claude-sonnet-4-6")
     if reflect is None:
         reflect = ReflectionEngine(model=model or "claude-sonnet-4-6")
     if life is None:
@@ -68,7 +68,7 @@ def run_scenario(
         personas=personas,
         catalog=catalog,
         macro=config.macro,
-        decision=decision,
+        behavior=behavior,
         life=life,
         reflect=reflect,
     )
