@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6"]
+notebook = ["pandas>=2.0", "matplotlib>=3.7", "jupyter>=1.0"]
 
 [project.scripts]
 consumer-agents = "consumer_agents.cli:app"
