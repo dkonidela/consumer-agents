@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import typer
@@ -10,6 +11,26 @@ from rich.table import Table
 
 from consumer_agents.datalake.queries import open_run
 from consumer_agents.scenarios.runner import run_scenario
+
+
+def _load_dotenv(path: Path = Path(".env")) -> None:
+    """Tiny dotenv loader. Reads KEY=VALUE lines from `.env` in CWD and
+    populates os.environ for any keys not already set. Lines starting
+    with `#` and blank lines are ignored. Quotes around values are stripped.
+    """
+    if not path.exists():
+        return
+    for raw in path.read_text().splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        os.environ.setdefault(key, value)
+
+
+_load_dotenv()
 
 app = typer.Typer(help="consumer-agents — agent simulation engine")
 console = Console()

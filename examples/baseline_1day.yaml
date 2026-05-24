@@ -1,0 +1,19 @@
+scenario_id: baseline_1day
+start_date: 2026-01-01
+n_ticks: 1
+seed: 42
+
+personas_dir: personas
+world_dir: world
+
+notes:
+  - "1-day smoke run with the real LLM. Verifies the DecisionEngine wiring before committing to the full 90-day run."
+
+macro:
+  inflation_rate: 0.03
+  unemployment_rate: 0.04
+  consumer_sentiment: 0.55
+
+category_knobs: {}
+
+scripted_events: []

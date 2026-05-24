@@ -25,6 +25,15 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    TextColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn,
+)
+
 from consumer_agents.agents.behavior import BehaviorEngine
 from consumer_agents.agents.loop import ConsumerRuntime, step
 from consumer_agents.agents.reflection import ReflectionEngine
@@ -75,48 +84,75 @@ def run_scheduler(
     calendar = SimCalendar(start_date=config.start_date, current_day=0)
     last_reflection_week = -1
 
-    for _ in range(config.n_ticks):
-        today = calendar.today
-        scripted_today = _scripted_for_day(config.scripted_events, calendar.current_day)
+    progress = Progress(
+        TextColumn("[bold cyan]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+        TextColumn("days"),
+        TimeElapsedColumn(),
+        TextColumn("•"),
+        TimeRemainingColumn(),
+        TextColumn("[dim]| events={task.fields[events]} reflections={task.fields[reflections]}"),
+    )
+    with progress:
+        task_id = progress.add_task(
+            f"{config.scenario_id}",
+            total=config.n_ticks,
+            events=0,
+            reflections=0,
+        )
+        reflection_count = 0
 
-        for rt in runtimes:
-            # 1. Scripted life events for today.
-            for fired in life.fire_scripted(rt.persona, scripted_today):
-                rt.persona = apply_dna_diff(rt.persona, fired.dna_diff)
-                payload = {
-                    "event_id": fired.event_id,
-                    "lcu": fired.lcu,
-                    "narration": fired.narration,
-                    "dna_diff": fired.dna_diff,
-                    "source": fired.source,
-                }
-                events_writer.append(rt.persona.id, today, "life_event", payload)
-                rt.record("life_event", payload, calendar.current_day)
+        for _ in range(config.n_ticks):
+            today = calendar.today
+            scripted_today = _scripted_for_day(config.scripted_events, calendar.current_day)
 
-            # 2-3. Daily step (cash flows + behavior + actions).
-            step(rt, behavior, catalog, macro, calendar, events_writer, config.category_knobs)
-
-            # 4. Daily economics snapshot.
-            snap_writer.append_daily(rt.persona.id, today, rt.persona, rt.cash_usd)
-
-        # 5-6. Weekly cadence: reflection + DNA snapshot.
-        if calendar.week_index() != last_reflection_week and calendar.current_day > 0:
-            last_reflection_week = calendar.week_index()
             for rt in runtimes:
-                week_events = [
-                    e
-                    for e in rt.recent_events
-                    if calendar.current_day - int(e.get("_tick_day_offset", 0)) <= 7
-                ]
-                observations = reflect.reflect(rt.persona, week_events, rt.reflections)
-                if observations:
-                    rt.reflections.extend(observations)
-                    payload = {"observations": observations}
-                    events_writer.append(rt.persona.id, today, "reflection", payload)
-                    rt.record("reflection", payload, calendar.current_day)
-                snap_writer.append_weekly_dna(rt.persona.id, today, rt.persona, rt.cash_usd)
+                # 1. Scripted life events for today.
+                for fired in life.fire_scripted(rt.persona, scripted_today):
+                    rt.persona = apply_dna_diff(rt.persona, fired.dna_diff)
+                    payload = {
+                        "event_id": fired.event_id,
+                        "lcu": fired.lcu,
+                        "narration": fired.narration,
+                        "dna_diff": fired.dna_diff,
+                        "source": fired.source,
+                    }
+                    events_writer.append(rt.persona.id, today, "life_event", payload)
+                    rt.record("life_event", payload, calendar.current_day)
 
-        calendar.advance(1)
+                # 2-3. Daily step (cash flows + behavior + actions).
+                step(rt, behavior, catalog, macro, calendar, events_writer, config.category_knobs)
+
+                # 4. Daily economics snapshot.
+                snap_writer.append_daily(rt.persona.id, today, rt.persona, rt.cash_usd)
+
+            # 5-6. Weekly cadence: reflection + DNA snapshot.
+            if calendar.week_index() != last_reflection_week and calendar.current_day > 0:
+                last_reflection_week = calendar.week_index()
+                for rt in runtimes:
+                    week_events = [
+                        e
+                        for e in rt.recent_events
+                        if calendar.current_day - int(e.get("_tick_day_offset", 0)) <= 7
+                    ]
+                    observations = reflect.reflect(rt.persona, week_events, rt.reflections)
+                    if observations:
+                        rt.reflections.extend(observations)
+                        payload = {"observations": observations}
+                        events_writer.append(rt.persona.id, today, "reflection", payload)
+                        rt.record("reflection", payload, calendar.current_day)
+                        reflection_count += 1
+                    snap_writer.append_weekly_dna(rt.persona.id, today, rt.persona, rt.cash_usd)
+
+            calendar.advance(1)
+            progress.update(
+                task_id,
+                advance=1,
+                description=f"{config.scenario_id} · day {calendar.current_day}/{config.n_ticks} ({today.isoformat()})",
+                events=len(events_writer),
+                reflections=reflection_count,
+            )
 
     events_writer.flush()
     snap_writer.flush()
