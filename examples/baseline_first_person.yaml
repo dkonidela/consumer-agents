@@ -1,0 +1,23 @@
+scenario_id: baseline_first_person
+start_date: 2026-01-01
+n_ticks: 90
+seed: 42
+
+personas_dir: personas
+world_dir: world
+
+notes:
+  - "Same as baseline.yaml but reflections are written as first-person diary"
+  - "entries in the persona's voice, not third-person analytical observations."
+  - "Experimental test for: does the style/voice of reflections affect"
+  - "the self-fulfilling plateau pattern observed in the baseline run?"
+
+macro:
+  inflation_rate: 0.03
+  unemployment_rate: 0.04
+  consumer_sentiment: 0.55
+
+category_knobs: {}
+scripted_events: []
+
+reflection_mode: "first_person"

@@ -49,7 +49,10 @@ def run_scenario(
     if behavior is None:
         behavior = BehaviorEngine(model=model or "claude-sonnet-4-6")
     if reflect is None:
-        reflect = ReflectionEngine(model=model or "claude-sonnet-4-6")
+        reflect = ReflectionEngine(
+            model=model or "claude-sonnet-4-6",
+            mode=config.reflection_mode,
+        )
     if life is None:
         life = LifeEventEngine(vocab=vocab)
 

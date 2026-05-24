@@ -1,0 +1,22 @@
+scenario_id: baseline_no_reflections
+start_date: 2026-01-01
+n_ticks: 90
+seed: 42
+
+personas_dir: personas
+world_dir: world
+
+notes:
+  - "Same as baseline.yaml but with the weekly reflection step turned off entirely."
+  - "Experimental control for: does the reflection feedback loop cause the convergence pattern?"
+  - "Decision prompts in this run never see any reflections."
+
+macro:
+  inflation_rate: 0.03
+  unemployment_rate: 0.04
+  consumer_sentiment: 0.55
+
+category_knobs: {}
+scripted_events: []
+
+reflection_mode: "off"
